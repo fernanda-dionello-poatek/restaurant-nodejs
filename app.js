@@ -5,12 +5,16 @@ const app = express();
 dotenv.config();
 const port = process.env.PORT;
 
+const loginRoute = require("./routes/login_route");
 const usersRoutes = require("./routes/users_routes");
+const users_controller = require("./controllers/users_controller");
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/login", loginRoute);
+app.use(users_controller.tokenValidation);
 app.use('/users', usersRoutes);
 
 app.listen(port, () => {
