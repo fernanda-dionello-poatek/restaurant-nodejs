@@ -53,7 +53,9 @@ exports.listUsers = async () => {
 
 exports.getUserById = async (id) => {
   try {
+    await users_validators.validateUserId(id);
     const users = usersRepository.getUserById(id);
+
     return (await users).rows[0];
   } catch (e) {
     throw e;
@@ -62,6 +64,7 @@ exports.getUserById = async (id) => {
 
 exports.deleteUserById = async (id) => {
   try {
+    await users_validators.validateUserId(id);
     const users = usersRepository.deleteUserById(id);
     return (await users).rows[0];
   } catch (e) {
@@ -72,8 +75,10 @@ exports.deleteUserById = async (id) => {
 exports.updateUserById = async (id, user) => {
   try {
     await users_validators.validateUserUpdate(user, id);
+    const userFounded = await usersRepository.findUsername(user.username);
+    users_validators.validateUsername(userFounded, user);
     const users = await usersRepository.updateUserById(id, user);
-    return await users
+    return await users;
   } catch (e) {
     throw e;
   }

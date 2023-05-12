@@ -48,6 +48,16 @@ exports.validateUser = (userFounded, userBody) => {
   }
 };
 
+exports.validateUsername = (userFounded, userBody) => {
+  if (userFounded.rowCount != 0) {
+    err = {
+      message: `An user with this username ${userBody.username} already exists.`,
+      status: 404,
+    };
+    throw err;
+  }
+};
+
 exports.validateUserId = async (id) => {
   const userSelected = await users_repository.getUserById(id);
   if (userSelected.rowCount == 0) {

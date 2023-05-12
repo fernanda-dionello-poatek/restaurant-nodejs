@@ -54,7 +54,7 @@ exports.updateUserById = async (req, resp) => {
     const { id } = req.params;
     const user = req.body;
     await usersServices.updateUserById(id, user);
-    resp.json("Author updated successfully");
+    resp.json("User updated successfully");
   } catch (e) {
     returnError(e, resp);
   }
