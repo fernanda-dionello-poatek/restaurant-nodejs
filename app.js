@@ -8,6 +8,7 @@ const port = process.env.PORT;
 const loginRoute = require("./routes/login_route");
 const usersRoutes = require("./routes/users_routes");
 const productsRoutes = require("./routes/products_routes");
+const ordersRoutes = require("./routes/orders_routes");
 const users_controller = require("./controllers/users_controller");
 
 app.use(cors());
@@ -18,6 +19,7 @@ app.use("/login", loginRoute);
 app.use(users_controller.tokenValidation);
 app.use("/users", usersRoutes);
 app.use("/products", productsRoutes);
+app.use("/orders", ordersRoutes);
 
 app.listen(port, () => {
   console.log("listening in port", port);
