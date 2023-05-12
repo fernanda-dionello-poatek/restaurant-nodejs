@@ -1,6 +1,5 @@
 const { pool } = require("../configs/db_connection");
 
-
 exports.findUsername = async (username) => {
   const bd = await pool.connect();
   const values = [username];
@@ -67,6 +66,31 @@ exports.updateUserById = async (id, user) => {
       err = {
         message:
           "Cannot update to an user that already exists in authors table.",
+        status: 403,
+      };
+    }
+    throw err;
+  } finally {
+    bd.release();
+  }
+};
+
+exports.createUser = async (user, pwd) => {
+  const bd = await pool.connect();
+  const values = [user.username, pwd];
+  try {
+    await bd.query("BEGIN");
+    await bd.query(
+      "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *",
+      values
+    );
+    await bd.query("COMMIT");
+  } catch (err) {
+    await bd.query("ROLLBACK");
+    if ((err.code = 23505)) {
+      err = {
+        message:
+          "Cannot create duplicated user, it already exists in users table.",
         status: 403,
       };
     }

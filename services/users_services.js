@@ -1,6 +1,7 @@
 const usersRepository = require("../repository/users_repository");
 const users_validators = require("./utils/users_validators");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const dotenv = require("dotenv");
 dotenv.config();
 const secret = process.env.SECRET;
@@ -81,5 +82,22 @@ exports.updateUserById = async (id, user) => {
     return await users;
   } catch (e) {
     throw e;
+  }
+};
+
+exports.createUser = async (user) => {
+  try {
+    users_validators.validateUserLogin(user);
+    const userFounded = await usersRepository.findUsername(user.username);
+    users_validators.validateUsername(userFounded, user);
+
+    let encryptPassword = crypto.createHash("sha1");
+    encryptPassword.update(user.password);
+    const pwd = encryptPassword.digest("hex");
+    const userCreated = await usersRepository.createUser(user, pwd);
+    return await userCreated;
+    return;
+  } catch (err) {
+    throw err;
   }
 };

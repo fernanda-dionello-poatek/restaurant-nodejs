@@ -59,3 +59,13 @@ exports.updateUserById = async (req, resp) => {
     returnError(e, resp);
   }
 };
+
+exports.createUser = async (req, resp) => {
+  const user = req.body;
+  try {
+    await usersServices.createUser(user);
+    resp.status(201).json("User created successfully");
+  } catch (e) {
+    returnError(e, resp);
+  }
+};
