@@ -64,8 +64,7 @@ exports.updateUserById = async (id, user) => {
     await bd.query("ROLLBACK");
     if ((err.code = 23505)) {
       err = {
-        message:
-          "Cannot update to an user that already exists in authors table.",
+        message: "Cannot update to an user that already exists in users table.",
         status: 403,
       };
     }
