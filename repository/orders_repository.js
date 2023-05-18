@@ -68,3 +68,22 @@ exports.deleteOrderById = async (id) => {
     bd.release();
   }
 };
+
+exports.getTableCheckoutById = async (id) => {
+  const bd = await pool.connect();
+  const values = [id];
+
+  try {
+    return await bd.query(`SELECT orders.id, orders.product_qty, orders.created_on, orders.order_card, products.name, products.price, users.username
+        FROM orders, tables, users, products, order_cards
+        WHERE orders.table_id = tables.id
+        AND orders.table_id = $1
+        AND orders.user_id = users.id
+        AND orders.product_id = products.id
+        AND orders.order_card = order_cards.card`, values);
+  } catch (e) {
+    throw e;
+  } finally {
+    bd.release();
+  }
+};
